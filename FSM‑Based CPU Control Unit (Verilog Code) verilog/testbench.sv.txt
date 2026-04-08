@@ -1,0 +1,63 @@
+//==============================================================
+// TESTBENCH FOR CPU CONTROL UNIT
+//==============================================================
+
+module tb_cpu_control_unit;
+
+    logic clk, reset;
+    logic [3:0] opcode;
+    logic mem_read, mem_write, reg_write, alu_op;
+    logic [2:0] state_out;
+
+    // Instantiate the DUT (Device Under Test)
+    cpu_control_unit dut (
+        .clk(clk),
+        .reset(reset),
+        .opcode(opcode),
+        .mem_read(mem_read),
+        .mem_write(mem_write),
+        .reg_write(reg_write),
+        .alu_op(alu_op),
+        .state_out(state_out)
+    );
+
+    // Clock generation: 10ns period
+    always #5 clk = ~clk;
+
+    initial begin
+        $display("Starting CPU Control Unit Test...");
+
+        clk = 0;
+        reset = 1;
+        opcode = 4'b0000;
+
+        #10 reset = 0; // Release reset
+
+        // -------------------------
+        // Test ALU instruction
+        // -------------------------
+        opcode = 4'b0001; // ALU
+        #50;
+
+        // -------------------------
+        // Test LOAD instruction
+        // -------------------------
+        opcode = 4'b0010; // LOAD
+        #50;
+
+        // -------------------------
+        // Test STORE instruction
+        // -------------------------
+        opcode = 4'b0011; // STORE
+        #50;
+
+        // -------------------------
+        // Test unknown opcode
+        // -------------------------
+        opcode = 4'b1111; // Invalid
+        #50;
+
+        $finish;
+    end
+
+endmodule
